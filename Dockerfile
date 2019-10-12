@@ -8,7 +8,7 @@ COPY build.sbt build.sbt
 RUN sbt nativeLink
 
 FROM scala-native-runtime:latest
-COPY --from=openwhisk/actionloop-v2:latest /bin/proxy /bin/proxy
+COPY --from=openwhisk/actionloop-v2:nightly /bin/proxy /bin/proxy
 RUN mkdir -p /proxy/bin /proxy/lib /proxy/action
 COPY --from=scalabuilder /opt/sbt/target/scala-2.11/scala-native-open-whisk-out /proxy/bin/exec
 WORKDIR /proxy
