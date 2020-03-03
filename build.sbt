@@ -4,4 +4,4 @@ name := "scala-native-open-whisk"
 
 scalaVersion := "2.11.12"
 
-libraryDependencies += "io.argonaut" %%% "argonaut" % "6.2.3"
+libraryDependencies += "com.lihaoyi" %%% "ujson" % "1.0.0"
