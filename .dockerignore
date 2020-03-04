@@ -2,3 +2,7 @@ target
 .bloop
 .metals
 /Dockerfile
+/action.zip
+/script.sh
+/.dockerignore
+/.scalafmt.conf
