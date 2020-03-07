@@ -3,3 +3,7 @@ target/
 .bloop/
 .idea/
 project/metals.sbt
+action.zip
+lowered.hnir
+.DS_Store
+.vscode
