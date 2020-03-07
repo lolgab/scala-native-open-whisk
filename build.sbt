@@ -1,21 +1,20 @@
-val commonSettings = Seq(
-  scalaVersion := "2.11.12"
-)
+val commonNativeSettings = scalaVersion := "2.11.12"
 
-lazy val root = project.in(file("."))
+lazy val openwhisk = crossProject(NativePlatform, JVMPlatform)
   .settings(
-    commonSettings,
-    name := "scala-native-open-whisk", 
+    name := "scala-native-open-whisk",
     libraryDependencies ++= Seq(
       "com.lihaoyi" %%% "upickle" % "1.0.0",
-      "com.outr" %%% "scribe" % "2.7.12",
       "com.lihaoyi" %%% "utest" % "0.7.4" % Test
-    ),
-    testFrameworks += new TestFramework("utest.runner.Framework"),
-    Test / nativeLinkStubs := true
-  ).enablePlugins(ScalaNativePlugin)
+      ),
+    testFrameworks += new TestFramework("utest.runner.Framework")
+  )
+  .nativeSettings(
+    Test / nativeLinkStubs := true,
+    commonNativeSettings
+  )
 
-lazy val examples = project
-  .settings(commonSettings)
-  .dependsOn(root)
-  .enablePlugins(ScalaNativePlugin)
+lazy val examples = crossProject(NativePlatform, JVMPlatform)
+  .crossType(CrossType.Pure)
+  .nativeSettings(commonNativeSettings)
+  .dependsOn(openwhisk)

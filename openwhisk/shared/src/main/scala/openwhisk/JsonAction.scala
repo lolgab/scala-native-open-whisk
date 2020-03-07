@@ -1,12 +1,5 @@
 package openwhisk
 
-import scala.scalanative.posix.unistd
-import scala.scalanative.posix.stdlib.setenv
-import scala.scalanative.libc.stdlib.malloc
-import scala.scalanative.libc.stdio._
-import scala.scalanative.libc.string._
-import scala.scalanative.unsafe._
-
 import java.nio.charset.Charset
 import scala.io.StdIn
 
@@ -14,7 +7,7 @@ trait JsonAction {
   def main(args: Array[String]): Unit = {
     // Scala Native crashes if HOME is not set
     // https://github.com/scala-native/scala-native/pull/1738
-    setenv(c"HOME", c"", 0)
+    Platform.setHomeEnv()
     if(System.getenv("__OW_WAIT_FOR_ACK") != null)
       Fd3Writer.writer.write("""{"ok":true}""")
     actionImpl(StdIn.readLine, writeToFd3)
