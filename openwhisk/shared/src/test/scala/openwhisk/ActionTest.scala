@@ -10,8 +10,14 @@ object JsonInt {
   implicit val rw: ReadWriter[JsonInt] = macroRW
 }
 
-object ExampleAction extends Action[JsonInt, JsonInt]() {
-  
+case class JsonList(list: List[Int])
+object JsonList {
+  implicit val rw: ReadWriter[JsonList] = macroRW
+}
+
+object ExampleAction extends Action[JsonInt, JsonInt] {
+  implicit val reader = JsonInt.rw
+  implicit val writer = JsonInt.rw
   override def main(args: JsonInt, env: Map[String,String]): Either[String,JsonInt] = {
     Right(JsonInt(args.int + 1))
   }
@@ -19,7 +25,7 @@ object ExampleAction extends Action[JsonInt, JsonInt]() {
 }
 
 object ActionTest extends TestSuite {
-  def myTest[T](action: Action[_, T], lines: Seq[String], expected: Seq[T])(implicit w: Writer[T]) = {
+  def testAction[T](action: Action[_, T], lines: Seq[String], expected: Seq[T])(implicit w: Writer[T]) = {
     val mutableLines = mutable.ListBuffer(lines:_*)
     def readLine() = try {
       mutableLines.remove(0)
@@ -29,7 +35,7 @@ object ActionTest extends TestSuite {
     val outputJson = mutable.ListBuffer.empty[ujson.Obj]
     def writeJson(value: ujson.Obj) = outputJson += value
 
-    ExampleAction.actionImpl(readLine, writeJson)
+    action.actionImpl(readLine, writeJson)
     val expectedJson = expected.map(writeJs[T](_)(w))
     assert(outputJson == expectedJson)
   }
@@ -46,7 +52,23 @@ object ActionTest extends TestSuite {
           """{"value": {"int": 2}}"""
         )
         val expected = Seq(JsonInt(2), JsonInt(3))
-        myTest(ExampleAction, lines, expected)
+        testAction(ExampleAction, lines, expected)
+      }
+      test("should manage lists") {
+        val lines = List(
+          """{"value": {"int": 1}}""",
+          """{"value": {"int": 2}}"""
+        )
+        val action = new Action[JsonInt, JsonList] {
+          def main(args: JsonInt, env: Map[String,String]): Either[String,JsonList] = {
+            if(args.int > 0) Right(JsonList(0.to(args.int).toList))
+            else Left("error")
+          }
+          implicit val reader: upickle.default.Reader[JsonInt] = JsonInt.rw
+          implicit val writer: upickle.default.Writer[JsonList] = JsonList.rw
+        }
+        val expected = Seq(JsonList(List(0,1)), JsonList(List(0,1,2)))
+        testAction[JsonList](action, lines, expected)
       }
     }
   }

@@ -1,4 +1,4 @@
-package openwhisk
+package openwhisk.fd3writer
 
 import scala.scalanative.unsafe._
 import scala.scalanative.runtime.ByteArray
@@ -7,8 +7,8 @@ import java.nio.charset.Charset
 import java.nio.CharBuffer
 import java.io.BufferedWriter
 
-object Fd3Writer {
-  private val javaIoWriter = new java.io.Writer {
+private [fd3writer] object Fd3WriterImpl {
+  private object JavaIoWriter extends java.io.Writer {
     override def write(buf: Array[Char], off: Int, len: Int): Unit = {
       val buffer = Charset.defaultCharset().encode(CharBuffer.wrap(buf, off, len))
       val bytes = buffer.array()
@@ -21,5 +21,5 @@ object Fd3Writer {
     override def close(): Unit = ()
   }
 
-  val writer = new BufferedWriter(javaIoWriter)
+  private [fd3writer] val writer: BufferedWriter = new BufferedWriter(JavaIoWriter)
 }

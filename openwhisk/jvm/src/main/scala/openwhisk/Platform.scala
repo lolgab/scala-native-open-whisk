@@ -1,5 +1,5 @@
 package openwhisk
 
-object Platform {
+private [openwhisk] object Platform {
   def setHomeEnv(): Unit = ()
 }

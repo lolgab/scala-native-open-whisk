@@ -1,6 +1,7 @@
 target
 .bloop
 .metals
+/project/metals.sbt
 /Dockerfile
 /action.zip
 /script.sh

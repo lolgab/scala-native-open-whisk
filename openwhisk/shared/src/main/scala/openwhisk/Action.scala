@@ -2,7 +2,9 @@ package openwhisk
 
 import upickle.default._
 
-abstract class Action[T, U](implicit val ir: Reader[T], val ow: Writer[U]) extends JsonAction {
+trait Action[T, U] extends JsonAction {
+  implicit val reader: Reader[T]
+  implicit val writer: Writer[U]
 
   def main(args: T, env: Map[String, String]): Either[String, U]
 

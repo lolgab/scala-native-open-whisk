@@ -6,7 +6,7 @@ lazy val openwhisk = crossProject(NativePlatform, JVMPlatform)
     libraryDependencies ++= Seq(
       "com.lihaoyi" %%% "upickle" % "1.0.0",
       "com.lihaoyi" %%% "utest" % "0.7.4" % Test
-      ),
+    ),
     testFrameworks += new TestFramework("utest.runner.Framework")
   )
   .nativeSettings(

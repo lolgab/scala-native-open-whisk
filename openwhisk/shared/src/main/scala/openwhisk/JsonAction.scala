@@ -2,6 +2,7 @@ package openwhisk
 
 import java.nio.charset.Charset
 import scala.io.StdIn
+import fd3writer.Fd3Writer
 
 trait JsonAction {
   def main(args: Array[String]): Unit = {
@@ -9,14 +10,8 @@ trait JsonAction {
     // https://github.com/scala-native/scala-native/pull/1738
     Platform.setHomeEnv()
     if(System.getenv("__OW_WAIT_FOR_ACK") != null)
-      Fd3Writer.writer.write("""{"ok":true}""")
-    actionImpl(StdIn.readLine, writeToFd3)
-  }
-
-  private def writeToFd3(obj: ujson.Obj): Unit = {
-    ujson.writeTo(obj, Fd3Writer.writer)
-    Fd3Writer.writer.write('\n')
-    Fd3Writer.writer.flush()
+      Fd3Writer.write(ujson.Obj("ok" -> true))
+    actionImpl(StdIn.readLine, Fd3Writer.write)
   }
 
   private [openwhisk] def actionImpl(readLine: () => String, write: ujson.Obj => Unit): Unit = {
