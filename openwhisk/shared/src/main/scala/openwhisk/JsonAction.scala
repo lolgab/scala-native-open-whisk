@@ -23,7 +23,9 @@ trait JsonAction {
         val env = (json -= "value").mapValues(_.str).toMap
         main(value, env)
       } catch {
-        case e: Exception => Left(e.toString())
+        case e: Exception =>
+          e.printStackTrace()
+          Left(e.toString())
       }
       val res = resEither.fold(
         err => ujson.Obj("error" -> err),

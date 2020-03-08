@@ -5,20 +5,14 @@ import openwhisk.Action
 
 // model
 case class Input(int: Int)
-object Input {
-  implicit val inputReader: Reader[Input] = macroR
-}
 case class Output(list: Seq[Int])
-object Output {
-  implicit val outputWriter: Writer[Output] = macroW
-}
 
 object IncrementAction extends Action[Input, Output] {
-  implicit val reader: Reader[Input] = implicitly
-  implicit val writer: Writer[Output] = implicitly
+  implicit val reader = macroR[Input]
+  implicit val writer = macroW[Output]
 
   def main(arg: Input, env: Map[String, String]): Either[String, Output] = {
-    if(arg.int > 0) Right(Output(0.to(arg.int).toList))
+    if(arg.int > 0) Right(Output(0.to(arg.int)))
     else Left(s"$arg is a negative number!")
   }
 }

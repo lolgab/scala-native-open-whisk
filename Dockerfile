@@ -7,6 +7,6 @@ COPY project/build.properties project/
 RUN sbt update
 COPY . .
 RUN sbt examplesNative/nativeLink
-RUN cp target/scala-2.11/scala-native-open-whisk-out exec
+RUN mv examples/native/target/scala-2.11/examples-out exec
 RUN zip action.zip exec
 CMD [ "cat", "action.zip" ]
