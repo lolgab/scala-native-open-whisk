@@ -20,7 +20,7 @@ trait JsonAction {
       val resEither: Either[String, ujson.Obj] = try {
         val json = ujson.read(line).obj
         val value = json("value").obj
-        val env = (json -= "value").mapValues(_.str).toMap
+        val env = (json -= "value").mapValues(v => s"__OW_${v.str.toUpperCase}").toMap
         main(value, env)
       } catch {
         case e: Exception =>

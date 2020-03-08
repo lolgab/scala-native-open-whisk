@@ -7,7 +7,7 @@ import openwhisk.Action
 case class Input(int: Int)
 case class Output(list: Seq[Int])
 
-object IncrementAction extends Action[Input, Output] {
+object RangeAction extends Action[Input, Output] {
   implicit val reader = macroR[Input]
   implicit val writer = macroW[Output]
 
