@@ -123,11 +123,6 @@ I have created a docker image based on Alpine Linux that has the Scala Native ru
 You need to run `nativeLink` on Alpine to create a valid executable.
 You can find an example on [script.sh](script.sh) where the example action is update to IBM Cloud
 
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
-
 ## Authors
 
 * **Lorenzo Gabriele** - *Initial work*
